@@ -10,6 +10,46 @@ use std::process::Command;
 use colored::Colorize;
 use rusqlite::{Connection, Error, Result};
 
+
+/// 自动驾驶系统软件包安装位置
+pub static PACKAGE_PATH: &str = "/opt/waytous/modules";
+
+/// 软件包元数据名称
+pub static MODULE_META_DATA_DB: &str = "meta";
+
+/// 获取系统信息
+/// * `code_name` - 发行版代号, 例如: bionic focal
+/// * `release` - 发行版版本, 例如: 18.04 20.04
+/// * `architecture` - 系统架构, 例如: x86_64 aarch64
+/// * `hostname` - 主机名
+pub struct SystemInfo {
+    pub code_name: String,
+    pub release: String,
+    pub architecture: String,
+    pub hostname: String,
+}
+
+/// 模块的元数据
+#[derive(Debug)]
+pub struct ModuleMetaDate {
+    pub id: i32,
+    pub name: Option<String>,
+    pub version: Option<String>,
+    pub platform: Option<String>,
+    pub author: Option<String>,
+    pub description: Option<String>,
+}
+
+/// 已安装的自动驾驶模块信息
+pub struct ModuleInfo {
+    pub name: String,
+    pub version: String,
+    pub architecture: String,
+    pub description: String,
+
+}
+
+
 /// 执行 shell 终端指令 并返回执行状态
 /// # Arguments
 /// * `program` - 指令名称
@@ -48,19 +88,6 @@ pub fn system_ret(program: &str, parameter: Vec<&str>) -> String {
 }
 
 /// 获取系统信息
-/// * `code_name` - 发行版代号, 例如: bionic focal
-/// * `release` - 发行版版本, 例如: 18.04 20.04
-/// * `architecture` - 系统架构, 例如: x86_64 aarch64
-/// * `hostname` - 主机名
-pub struct SystemInfo {
-    pub code_name: String,
-    pub release: String,
-    pub architecture: String,
-    pub hostname: String,
-}
-
-
-/// 获取系统信息
 /// # Arguments
 /// * null
 ///
@@ -80,18 +107,6 @@ pub fn get_system_info() -> SystemInfo {
     }
 }
 
-
-/// 模块的元数据
-#[derive(Debug)]
-pub struct ModuleMetaDate {
-    pub id: i32,
-    pub name: Option<String>,
-    pub version: Option<String>,
-    pub platform: Option<String>,
-    pub author: Option<String>,
-    pub description: Option<String>,
-}
-
 /// 读取 当前模块的的 meta 数据
 /// # Arguments
 /// * null
@@ -102,7 +117,7 @@ pub struct ModuleMetaDate {
 /// * Result<ModuleMetaDate> - 模块的元数据
 pub fn get_module_meta() -> Result<ModuleMetaDate, Error> {
     // 数据库连接
-    let conn = Connection::open("meta")?;
+    let conn = Connection::open("meta.db")?;
 
     // 查询数据
     let mut stmt = conn.prepare("SELECT id, name, version, platform, author, description FROM meta")?;
@@ -119,7 +134,7 @@ pub fn get_module_meta() -> Result<ModuleMetaDate, Error> {
 
     // 返回数据
     if let Some(meta) = meta_iter.next() {
-        meta
+        Ok(meta?)
     } else {
         Err(Error::QueryReturnedNoRows)
     }

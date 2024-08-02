@@ -34,12 +34,6 @@ pub enum MainCmds {
         sub_cmd: subcommand_define::ModuleCmds,
     },
 
-    #[command(about = "自动驾驶系统软件包的一系列操作")]
-    Package {
-        #[command(subcommand)]
-        sub_cmd: subcommand_define::PackageCmds,
-    },
-
     #[command(about = "OTA 制品的创建、读取、安装、拷贝、同步、修改等操作")]
     Artifact {
         /// 创建 sub_cmd 字段，用于存储 artifact 解析器的子命令
@@ -59,7 +53,6 @@ impl Waytous {
     pub fn run(&self) {
         match &self.cmds {
             Some(MainCmds::Module { sub_cmd }) => { cmd::module::module(sub_cmd); }
-            Some(MainCmds::Package { sub_cmd }) => { cmd::package::package(sub_cmd); }
             Some(MainCmds::Artifact { sub_cmd }) => { cmd::artifact::artifact(sub_cmd); }
             Some(MainCmds::Autocompletion {}) => { cmd::autocompletion::GenerateAutoCompletion::process(); }
             None => { Waytous::command().print_help().unwrap() }

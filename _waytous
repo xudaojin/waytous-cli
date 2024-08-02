@@ -1,0 +1,1203 @@
+#compdef waytous
+
+autoload -U is-at-least
+
+_waytous() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_waytous_commands" \
+"*::: :->waytous" \
+&& ret=0
+    case $state in
+    (waytous)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-command-$line[1]:"
+        case $line[1] in
+            (module)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_waytous__module_commands" \
+"*::: :->module" \
+&& ret=0
+
+    case $state in
+    (module)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-module-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+'--name=[模块名称]:NAME: ' \
+'--no-demo[是否把 demo 工程拷贝到当前工程中, 默认不拷贝]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(build)
+_arguments "${_arguments_options[@]}" : \
+'--jobs=[构建时所需的线程数量]:JOBS: ' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(set)
+_arguments "${_arguments_options[@]}" : \
+'--name=[模块名称]:NAME: ' \
+'--version=[模块版本号]:VERSION: ' \
+'--platform=[模块所属平台]:PLATFORM: ' \
+'--author=[模块作者信息]:AUTHOR: ' \
+'--description=[模块描述信息]:DESCRIPTION: ' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_waytous__module__get_commands" \
+"*::: :->get" \
+&& ret=0
+
+    case $state in
+    (get)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-module-get-command-$line[1]:"
+        case $line[1] in
+            (info)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__module__get__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-module-get-help-command-$line[1]:"
+        case $line[1] in
+            (info)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__module__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-module-help-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(build)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(set)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__module__help__get_commands" \
+"*::: :->get" \
+&& ret=0
+
+    case $state in
+    (get)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-module-help-get-command-$line[1]:"
+        case $line[1] in
+            (info)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(package)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_waytous__package_commands" \
+"*::: :->package" \
+&& ret=0
+
+    case $state in
+    (package)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-package-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(install)
+_arguments "${_arguments_options[@]}" : \
+'-n+[需要安装的软件包名称]:NAME: ' \
+'--name=[需要安装的软件包名称]:NAME: ' \
+'-v+[指定安装的软件包版本号, 如果未指定则安装最新版本]:VERSION: ' \
+'--version=[指定安装的软件包版本号, 如果未指定则安装最新版本]:VERSION: ' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(upgrade)
+_arguments "${_arguments_options[@]}" : \
+'-n+[需要更新的软件包名称]:NAME: ' \
+'--name=[需要更新的软件包名称]:NAME: ' \
+'-a+[更新当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
+'--all=[更新当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(uninstall)
+_arguments "${_arguments_options[@]}" : \
+'-n+[需要卸载的软件包名称]:NAME: ' \
+'--name=[需要卸载的软件包名称]:NAME: ' \
+'-a+[卸载当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
+'--all=[卸载当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(info)
+_arguments "${_arguments_options[@]}" : \
+'-n+[需要获取的软件包名称]:NAME: ' \
+'--name=[需要获取的软件包名称]:NAME: ' \
+'-a+[获取当前系统所有的软件包信息]:ALL:(true false)' \
+'--all=[获取当前系统所有的软件包信息]:ALL:(true false)' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__package__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-package-help-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(install)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(upgrade)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(uninstall)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(info)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(artifact)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_waytous__artifact_commands" \
+"*::: :->artifact" \
+&& ret=0
+
+    case $state in
+    (artifact)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-artifact-command-$line[1]:"
+        case $line[1] in
+            (write)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+":: :_waytous__artifact__write_commands" \
+"*::: :->write" \
+&& ret=0
+
+    case $state in
+    (write)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-artifact-write-command-$line[1]:"
+        case $line[1] in
+            (module-image)
+_arguments "${_arguments_options[@]}" : \
+'-T+[指定模块类型]:TYPE_VALUE:(deb run)' \
+'--type-value=[指定模块类型]:TYPE_VALUE:(deb run)' \
+'-n+[生成的制品名称, 格式\: 软件包名称-平台-架构-版本号-类型]:ARTIFACT_NAME: ' \
+'--artifact-name=[生成的制品名称, 格式\: 软件包名称-平台-架构-版本号-类型]:ARTIFACT_NAME: ' \
+'--device-type=[平台架构]:DEVICE_TYPE:(x86_64-bionic x86_64-focal aarch64-bionic aarch64-focal)' \
+'--software-version=[软件版本号, ex\: 1.0.0]:SOFTWARE_VERSION: ' \
+'*-f+[打包的文件]:FILES: ' \
+'*--files=[打包的文件]:FILES: ' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(boostrap)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(rootfs-image)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__artifact__write__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-artifact-write-help-command-$line[1]:"
+        case $line[1] in
+            (module-image)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(boostrap)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(rootfs-image)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(read)
+_arguments "${_arguments_options[@]}" : \
+'-f+[需要读取的 OTA 制品名称]:FILE: ' \
+'--file=[需要读取的 OTA 制品名称]:FILE: ' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(install)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(modify)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(cp)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(rsync)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__artifact__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-artifact-help-command-$line[1]:"
+        case $line[1] in
+            (write)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__artifact__help__write_commands" \
+"*::: :->write" \
+&& ret=0
+
+    case $state in
+    (write)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-artifact-help-write-command-$line[1]:"
+        case $line[1] in
+            (module-image)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(boostrap)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(rootfs-image)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(read)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(install)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(modify)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(cp)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(rsync)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(autocompletion)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-help-command-$line[1]:"
+        case $line[1] in
+            (module)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__help__module_commands" \
+"*::: :->module" \
+&& ret=0
+
+    case $state in
+    (module)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-help-module-command-$line[1]:"
+        case $line[1] in
+            (create)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(build)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(set)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(get)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__help__module__get_commands" \
+"*::: :->get" \
+&& ret=0
+
+    case $state in
+    (get)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-help-module-get-command-$line[1]:"
+        case $line[1] in
+            (info)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
+(package)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__help__package_commands" \
+"*::: :->package" \
+&& ret=0
+
+    case $state in
+    (package)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-help-package-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(install)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(upgrade)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(uninstall)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(info)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(artifact)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__help__artifact_commands" \
+"*::: :->artifact" \
+&& ret=0
+
+    case $state in
+    (artifact)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-help-artifact-command-$line[1]:"
+        case $line[1] in
+            (write)
+_arguments "${_arguments_options[@]}" : \
+":: :_waytous__help__artifact__write_commands" \
+"*::: :->write" \
+&& ret=0
+
+    case $state in
+    (write)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:waytous-help-artifact-write-command-$line[1]:"
+        case $line[1] in
+            (module-image)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(boostrap)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(rootfs-image)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(read)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(install)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(modify)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(cp)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(rsync)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(autocompletion)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_waytous_commands] )) ||
+_waytous_commands() {
+    local commands; commands=(
+'module:软件包的创建、编译、构建、打包等操作' \
+'package:自动驾驶系统软件包的一系列操作' \
+'artifact:OTA 制品的创建、读取、安装、拷贝、同步、修改等操作' \
+'autocompletion:生成并配置 cli 的自动补全脚本' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous commands' commands "$@"
+}
+(( $+functions[_waytous__artifact_commands] )) ||
+_waytous__artifact_commands() {
+    local commands; commands=(
+'write:创建一个用于 OTA 升级的制品' \
+'read:读取指定 OTA 制品的信息' \
+'install:在当前环境下安装指定的 OTA 制品' \
+'modify:修改指定的 OTA 制品' \
+'cp:拷贝指定的 OTA 制品到知道你的位置' \
+'list:列出指定 OTA 制品仓库中的所有制品' \
+'rsync:同步 OTA 制品到本地或云端制品仓库' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous artifact commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__cp_commands] )) ||
+_waytous__artifact__cp_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact cp commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help_commands] )) ||
+_waytous__artifact__help_commands() {
+    local commands; commands=(
+'write:创建一个用于 OTA 升级的制品' \
+'read:读取指定 OTA 制品的信息' \
+'install:在当前环境下安装指定的 OTA 制品' \
+'modify:修改指定的 OTA 制品' \
+'cp:拷贝指定的 OTA 制品到知道你的位置' \
+'list:列出指定 OTA 制品仓库中的所有制品' \
+'rsync:同步 OTA 制品到本地或云端制品仓库' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous artifact help commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__cp_commands] )) ||
+_waytous__artifact__help__cp_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help cp commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__help_commands] )) ||
+_waytous__artifact__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help help commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__install_commands] )) ||
+_waytous__artifact__help__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help install commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__list_commands] )) ||
+_waytous__artifact__help__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help list commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__modify_commands] )) ||
+_waytous__artifact__help__modify_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help modify commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__read_commands] )) ||
+_waytous__artifact__help__read_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help read commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__rsync_commands] )) ||
+_waytous__artifact__help__rsync_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help rsync commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__write_commands] )) ||
+_waytous__artifact__help__write_commands() {
+    local commands; commands=(
+'module-image:创建一个模块类型的 OTA 制品' \
+'boostrap:创建一个带有启动引导项的 image OTA 制品' \
+'rootfs-image:创建一个带有 rootfs 磁盘映像的 image OTA 制品' \
+    )
+    _describe -t commands 'waytous artifact help write commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__write__boostrap_commands] )) ||
+_waytous__artifact__help__write__boostrap_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help write boostrap commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__write__module-image_commands] )) ||
+_waytous__artifact__help__write__module-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help write module-image commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__help__write__rootfs-image_commands] )) ||
+_waytous__artifact__help__write__rootfs-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact help write rootfs-image commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__install_commands] )) ||
+_waytous__artifact__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact install commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__list_commands] )) ||
+_waytous__artifact__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact list commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__modify_commands] )) ||
+_waytous__artifact__modify_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact modify commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__read_commands] )) ||
+_waytous__artifact__read_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact read commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__rsync_commands] )) ||
+_waytous__artifact__rsync_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact rsync commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write_commands] )) ||
+_waytous__artifact__write_commands() {
+    local commands; commands=(
+'module-image:创建一个模块类型的 OTA 制品' \
+'boostrap:创建一个带有启动引导项的 image OTA 制品' \
+'rootfs-image:创建一个带有 rootfs 磁盘映像的 image OTA 制品' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous artifact write commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__boostrap_commands] )) ||
+_waytous__artifact__write__boostrap_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact write boostrap commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__help_commands] )) ||
+_waytous__artifact__write__help_commands() {
+    local commands; commands=(
+'module-image:创建一个模块类型的 OTA 制品' \
+'boostrap:创建一个带有启动引导项的 image OTA 制品' \
+'rootfs-image:创建一个带有 rootfs 磁盘映像的 image OTA 制品' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous artifact write help commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__help__boostrap_commands] )) ||
+_waytous__artifact__write__help__boostrap_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact write help boostrap commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__help__help_commands] )) ||
+_waytous__artifact__write__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact write help help commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__help__module-image_commands] )) ||
+_waytous__artifact__write__help__module-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact write help module-image commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__help__rootfs-image_commands] )) ||
+_waytous__artifact__write__help__rootfs-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact write help rootfs-image commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__module-image_commands] )) ||
+_waytous__artifact__write__module-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact write module-image commands' commands "$@"
+}
+(( $+functions[_waytous__artifact__write__rootfs-image_commands] )) ||
+_waytous__artifact__write__rootfs-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous artifact write rootfs-image commands' commands "$@"
+}
+(( $+functions[_waytous__autocompletion_commands] )) ||
+_waytous__autocompletion_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous autocompletion commands' commands "$@"
+}
+(( $+functions[_waytous__help_commands] )) ||
+_waytous__help_commands() {
+    local commands; commands=(
+'module:软件包的创建、编译、构建、打包等操作' \
+'package:自动驾驶系统软件包的一系列操作' \
+'artifact:OTA 制品的创建、读取、安装、拷贝、同步、修改等操作' \
+'autocompletion:生成并配置 cli 的自动补全脚本' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous help commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact_commands] )) ||
+_waytous__help__artifact_commands() {
+    local commands; commands=(
+'write:创建一个用于 OTA 升级的制品' \
+'read:读取指定 OTA 制品的信息' \
+'install:在当前环境下安装指定的 OTA 制品' \
+'modify:修改指定的 OTA 制品' \
+'cp:拷贝指定的 OTA 制品到知道你的位置' \
+'list:列出指定 OTA 制品仓库中的所有制品' \
+'rsync:同步 OTA 制品到本地或云端制品仓库' \
+    )
+    _describe -t commands 'waytous help artifact commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__cp_commands] )) ||
+_waytous__help__artifact__cp_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact cp commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__install_commands] )) ||
+_waytous__help__artifact__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact install commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__list_commands] )) ||
+_waytous__help__artifact__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact list commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__modify_commands] )) ||
+_waytous__help__artifact__modify_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact modify commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__read_commands] )) ||
+_waytous__help__artifact__read_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact read commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__rsync_commands] )) ||
+_waytous__help__artifact__rsync_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact rsync commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__write_commands] )) ||
+_waytous__help__artifact__write_commands() {
+    local commands; commands=(
+'module-image:创建一个模块类型的 OTA 制品' \
+'boostrap:创建一个带有启动引导项的 image OTA 制品' \
+'rootfs-image:创建一个带有 rootfs 磁盘映像的 image OTA 制品' \
+    )
+    _describe -t commands 'waytous help artifact write commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__write__boostrap_commands] )) ||
+_waytous__help__artifact__write__boostrap_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact write boostrap commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__write__module-image_commands] )) ||
+_waytous__help__artifact__write__module-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact write module-image commands' commands "$@"
+}
+(( $+functions[_waytous__help__artifact__write__rootfs-image_commands] )) ||
+_waytous__help__artifact__write__rootfs-image_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help artifact write rootfs-image commands' commands "$@"
+}
+(( $+functions[_waytous__help__autocompletion_commands] )) ||
+_waytous__help__autocompletion_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help autocompletion commands' commands "$@"
+}
+(( $+functions[_waytous__help__help_commands] )) ||
+_waytous__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help help commands' commands "$@"
+}
+(( $+functions[_waytous__help__module_commands] )) ||
+_waytous__help__module_commands() {
+    local commands; commands=(
+'create:创建一个模块的目录结构' \
+'build:构建当前模块' \
+'set:设置当前模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'get:获取指定模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+    )
+    _describe -t commands 'waytous help module commands' commands "$@"
+}
+(( $+functions[_waytous__help__module__build_commands] )) ||
+_waytous__help__module__build_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help module build commands' commands "$@"
+}
+(( $+functions[_waytous__help__module__create_commands] )) ||
+_waytous__help__module__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help module create commands' commands "$@"
+}
+(( $+functions[_waytous__help__module__get_commands] )) ||
+_waytous__help__module__get_commands() {
+    local commands; commands=(
+'info:获取当前模块的详细信息' \
+    )
+    _describe -t commands 'waytous help module get commands' commands "$@"
+}
+(( $+functions[_waytous__help__module__get__info_commands] )) ||
+_waytous__help__module__get__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help module get info commands' commands "$@"
+}
+(( $+functions[_waytous__help__module__set_commands] )) ||
+_waytous__help__module__set_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help module set commands' commands "$@"
+}
+(( $+functions[_waytous__help__package_commands] )) ||
+_waytous__help__package_commands() {
+    local commands; commands=(
+'list:列出当前系统已安装的自动驾驶系统软件包' \
+'install:安装指定自动驾驶系统软件包' \
+'upgrade:更新指定或者所有的自动驾驶系统软件包' \
+'uninstall:卸载指定或者所有的自动驾驶系统软件包' \
+'info:获取指定软件包的详细信息' \
+    )
+    _describe -t commands 'waytous help package commands' commands "$@"
+}
+(( $+functions[_waytous__help__package__info_commands] )) ||
+_waytous__help__package__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help package info commands' commands "$@"
+}
+(( $+functions[_waytous__help__package__install_commands] )) ||
+_waytous__help__package__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help package install commands' commands "$@"
+}
+(( $+functions[_waytous__help__package__list_commands] )) ||
+_waytous__help__package__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help package list commands' commands "$@"
+}
+(( $+functions[_waytous__help__package__uninstall_commands] )) ||
+_waytous__help__package__uninstall_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help package uninstall commands' commands "$@"
+}
+(( $+functions[_waytous__help__package__upgrade_commands] )) ||
+_waytous__help__package__upgrade_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help package upgrade commands' commands "$@"
+}
+(( $+functions[_waytous__module_commands] )) ||
+_waytous__module_commands() {
+    local commands; commands=(
+'create:创建一个模块的目录结构' \
+'build:构建当前模块' \
+'set:设置当前模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'get:获取指定模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous module commands' commands "$@"
+}
+(( $+functions[_waytous__module__build_commands] )) ||
+_waytous__module__build_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module build commands' commands "$@"
+}
+(( $+functions[_waytous__module__create_commands] )) ||
+_waytous__module__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module create commands' commands "$@"
+}
+(( $+functions[_waytous__module__get_commands] )) ||
+_waytous__module__get_commands() {
+    local commands; commands=(
+'info:获取当前模块的详细信息' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous module get commands' commands "$@"
+}
+(( $+functions[_waytous__module__get__help_commands] )) ||
+_waytous__module__get__help_commands() {
+    local commands; commands=(
+'info:获取当前模块的详细信息' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous module get help commands' commands "$@"
+}
+(( $+functions[_waytous__module__get__help__help_commands] )) ||
+_waytous__module__get__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module get help help commands' commands "$@"
+}
+(( $+functions[_waytous__module__get__help__info_commands] )) ||
+_waytous__module__get__help__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module get help info commands' commands "$@"
+}
+(( $+functions[_waytous__module__get__info_commands] )) ||
+_waytous__module__get__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module get info commands' commands "$@"
+}
+(( $+functions[_waytous__module__help_commands] )) ||
+_waytous__module__help_commands() {
+    local commands; commands=(
+'create:创建一个模块的目录结构' \
+'build:构建当前模块' \
+'set:设置当前模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'get:获取指定模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous module help commands' commands "$@"
+}
+(( $+functions[_waytous__module__help__build_commands] )) ||
+_waytous__module__help__build_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module help build commands' commands "$@"
+}
+(( $+functions[_waytous__module__help__create_commands] )) ||
+_waytous__module__help__create_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module help create commands' commands "$@"
+}
+(( $+functions[_waytous__module__help__get_commands] )) ||
+_waytous__module__help__get_commands() {
+    local commands; commands=(
+'info:获取当前模块的详细信息' \
+    )
+    _describe -t commands 'waytous module help get commands' commands "$@"
+}
+(( $+functions[_waytous__module__help__get__info_commands] )) ||
+_waytous__module__help__get__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module help get info commands' commands "$@"
+}
+(( $+functions[_waytous__module__help__help_commands] )) ||
+_waytous__module__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module help help commands' commands "$@"
+}
+(( $+functions[_waytous__module__help__set_commands] )) ||
+_waytous__module__help__set_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module help set commands' commands "$@"
+}
+(( $+functions[_waytous__module__set_commands] )) ||
+_waytous__module__set_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module set commands' commands "$@"
+}
+(( $+functions[_waytous__package_commands] )) ||
+_waytous__package_commands() {
+    local commands; commands=(
+'list:列出当前系统已安装的自动驾驶系统软件包' \
+'install:安装指定自动驾驶系统软件包' \
+'upgrade:更新指定或者所有的自动驾驶系统软件包' \
+'uninstall:卸载指定或者所有的自动驾驶系统软件包' \
+'info:获取指定软件包的详细信息' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous package commands' commands "$@"
+}
+(( $+functions[_waytous__package__help_commands] )) ||
+_waytous__package__help_commands() {
+    local commands; commands=(
+'list:列出当前系统已安装的自动驾驶系统软件包' \
+'install:安装指定自动驾驶系统软件包' \
+'upgrade:更新指定或者所有的自动驾驶系统软件包' \
+'uninstall:卸载指定或者所有的自动驾驶系统软件包' \
+'info:获取指定软件包的详细信息' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'waytous package help commands' commands "$@"
+}
+(( $+functions[_waytous__package__help__help_commands] )) ||
+_waytous__package__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package help help commands' commands "$@"
+}
+(( $+functions[_waytous__package__help__info_commands] )) ||
+_waytous__package__help__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package help info commands' commands "$@"
+}
+(( $+functions[_waytous__package__help__install_commands] )) ||
+_waytous__package__help__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package help install commands' commands "$@"
+}
+(( $+functions[_waytous__package__help__list_commands] )) ||
+_waytous__package__help__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package help list commands' commands "$@"
+}
+(( $+functions[_waytous__package__help__uninstall_commands] )) ||
+_waytous__package__help__uninstall_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package help uninstall commands' commands "$@"
+}
+(( $+functions[_waytous__package__help__upgrade_commands] )) ||
+_waytous__package__help__upgrade_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package help upgrade commands' commands "$@"
+}
+(( $+functions[_waytous__package__info_commands] )) ||
+_waytous__package__info_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package info commands' commands "$@"
+}
+(( $+functions[_waytous__package__install_commands] )) ||
+_waytous__package__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package install commands' commands "$@"
+}
+(( $+functions[_waytous__package__list_commands] )) ||
+_waytous__package__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package list commands' commands "$@"
+}
+(( $+functions[_waytous__package__uninstall_commands] )) ||
+_waytous__package__uninstall_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package uninstall commands' commands "$@"
+}
+(( $+functions[_waytous__package__upgrade_commands] )) ||
+_waytous__package__upgrade_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous package upgrade commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_waytous" ]; then
+    _waytous "$@"
+else
+    compdef _waytous waytous
+fi

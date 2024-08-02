@@ -38,102 +38,91 @@ fn create(name: &str, no_demo: bool) {
 
 fn build(jobs: &u32) {}
 
-fn set_config(name: &Option<String>, version: &Option<String>, platform: &Option<String>, author: &Option<String>, description: &Option<String>) -> Result<()> {
-    let conn = Connection::open("meta")?;
 
-    // 检查meta 是否存在，如果不存在则创建
+/// 获取当前系统中已经安装的自动驾驶系统模块列表
+fn print_all_module_list() {
+
+}
+
+fn set_config(name: &Option<String>, version: &Option<String>, platform: &Option<String>, author: &Option<String>, description: &Option<String>) -> Result<()> {
+    let mut conn = Connection::open("meta.db")?;
+
+    conn.execute_batch("PRAGMA key = 'test1234567890';")?;
+
+    // 创建表，如果表不存在
     conn.execute(
         "CREATE TABLE IF NOT EXISTS meta (
-        id INTEGER PRIMARY KEY,
-        name TEXT UNIQUE,
-        version TEXT,
-        platform TEXT,
-        author TEXT,
-        description  NULL,
-        UNIQUE(name)
-    )",
+            id INTEGER PRIMARY KEY,
+            name TEXT UNIQUE,
+            version TEXT,
+            platform TEXT,
+            author TEXT,
+            description TEXT,
+            UNIQUE(name)
+        )",
         [],
     )?;
 
-     // 检查 meta 是否为空, 如果为空， 则对其初始化
+    // 检查 meta 是否为空, 如果为空， 则对其初始化
     let count: i64 = conn.query_row("SELECT COUNT(*) FROM meta", [], |r| r.get(0))?;
+    let meta_fields = vec![
+        ("name", name),
+        ("version", version),
+        ("platform", platform),
+        ("author", author),
+        ("description", description),
+    ];
+
+    let transaction = conn.transaction()?;
+
     if count == 0 {
-        match name {
-            Some(name) => {
-                conn.execute("INSERT INTO meta (name) VALUES (?1)", params![name])?;
+        // 插入新的记录
+        for (field, value) in &meta_fields {
+            if let Some(value) = value {
+                transaction.execute(
+                    &format!("INSERT INTO meta ({}) VALUES (?1)", field),
+                    params![value],
+                )?;
             }
-            None => {}
-        }
-
-        match version {
-            Some(version) => {
-                conn.execute("INSERT INTO meta (version) VALUES (?1)", params![version])?;
-            }
-            None => {}
-        }
-
-        match platform {
-            Some(platform) => {
-                conn.execute("INSERT INTO meta (platform) VALUES (?1)", params![platform])?;
-            }
-            None => {}
-        }
-
-        match author {
-            Some(author) => {
-                conn.execute("INSERT INTO meta (author) VALUES (?1)", params![author])?;
-            }
-            None => {}
-        }
-
-        match description {
-            Some(description) => {
-                conn.execute("INSERT INTO meta (description) VALUES (?1)", params![description])?;
-            }
-            None => {}
         }
     } else {
-        if let Some(name) = name {
-            conn.execute("UPDATE meta SET name = ?1 WHERE id = 1", params![name])?;
-        }
-        if let Some(version) = version {
-            conn.execute("UPDATE meta SET version = ?1 WHERE id = 1", params![version])?;
-        }
-        if let Some(platform) = platform {
-            conn.execute("UPDATE meta SET platform = ?1 WHERE id = 1", params![platform])?;
-        }
-        if let Some(author) = author {
-            conn.execute("UPDATE meta SET author = ?1 WHERE id = 1", params![author])?;
-        }
-        if let Some(description) = description {
-            conn.execute("UPDATE meta SET description = ?1 WHERE id = 1", params![description])?;
+        // 更新现有记录
+        for (field, value) in &meta_fields {
+            if let Some(value) = value {
+                transaction.execute(
+                    &format!("UPDATE meta SET {} = ?1 WHERE id = 1", field),
+                    params![value],
+                )?;
+            }
         }
     }
 
+    transaction.commit()?;
     Ok(())
 }
 
 fn get_config_info() {
+
+    let mut table = Table::new();
+    table.load_preset(UTF8_FULL);
+    table.apply_modifier(UTF8_ROUND_CORNERS);
+    table.set_content_arrangement(ContentArrangement::Dynamic);
+    table.set_header(vec!["模块名称", "版本号", "适用平台", "作者", "描述"]);
     match common::common::get_module_meta() {
         Ok(meta) => {
-            let mut table = Table::new();
-            table
-                .load_preset(UTF8_FULL)
-                .apply_modifier(UTF8_ROUND_CORNERS)
-                .set_content_arrangement(ContentArrangement::Dynamic)
-                .set_header(vec!["模块名称", "版本号", "适用平台", "作者", "描述"])
-                .add_row(vec![
-                    meta.name.as_deref().unwrap_or("未定义"),
-                    meta.version.as_deref().unwrap_or("未定义"),
-                    meta.platform.as_deref().unwrap_or("未定义"),
-                    meta.author.as_deref().unwrap_or("未定义"),
-                    meta.description.as_deref().unwrap_or("未定义"),
-                ]);
-
+            table.add_row(vec![
+                meta.name.as_deref().unwrap_or("未定义"),
+                meta.version.as_deref().unwrap_or("未定义"),
+                meta.platform.as_deref().unwrap_or("未定义"),
+                meta.author.as_deref().unwrap_or("未定义"),
+                meta.description.as_deref().unwrap_or("未定义"),
+            ]);
             println!("{}", table.to_string().blue())
         }
         Err(e) => {
-            println!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red())
+            println!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red());
+            table.add_row(vec!["未定义", "未定义", "未定义", "未定义", "未定义"]);
+            println!("{}", table.to_string().red())
         }
     }
 }

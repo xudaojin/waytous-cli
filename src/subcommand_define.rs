@@ -48,6 +48,10 @@ pub enum ModuleCmds {
         sub_cmd: GetSubCmd,
     },
 
+    #[command(about = "列出当前系统中已经安装的所有模块")]
+    List {},
+
+    
 }
 
 
@@ -59,48 +63,6 @@ pub enum GetSubCmd {
 
 }
 
-/// 枚举定义 waytous package 命令下的所有子命令
-#[derive(Parser)]
-pub enum PackageCmds {
-    #[command(about = "列出当前系统已安装的自动驾驶系统软件包")]
-    List {},
-
-    #[command(about = "安装指定自动驾驶系统软件包")]
-    Install {
-        #[arg(short, long, help = "需要安装的软件包名称")]
-        name: String,
-
-        #[arg(short, long, help = "指定安装的软件包版本号, 如果未指定则安装最新版本")]
-        version: Option<String>,
-    },
-
-    #[command(about = "更新指定或者所有的自动驾驶系统软件包")]
-    Upgrade {
-        #[arg(short, long, help = "需要更新的软件包名称")]
-        name: Option<String>,
-
-        #[arg(short, long, help = "更新当前系统所有的自动驾驶系统软件包")]
-        all: Option<bool>,
-    },
-
-    #[command(about = "卸载指定或者所有的自动驾驶系统软件包")]
-    Uninstall {
-        #[arg(short, long, help = "需要卸载的软件包名称")]
-        name: Option<String>,
-
-        #[arg(short, long, help = "卸载当前系统所有的自动驾驶系统软件包")]
-        all: Option<bool>,
-    },
-
-    #[command(about = "获取指定软件包的详细信息")]
-    Info {
-        #[arg(short, long, help = "需要获取的软件包名称")]
-        name: Option<String>,
-
-        #[arg(short, long, help = "获取当前系统所有的软件包信息")]
-        all: Option<bool>,
-    },
-}
 
 /// 枚举定义 waytous artifact 命令下的所有子命令
 #[derive(Parser)]

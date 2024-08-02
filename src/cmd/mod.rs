@@ -5,5 +5,4 @@
  */
 pub mod module;
 pub mod autocompletion;
-pub mod package;
 pub mod artifact;
