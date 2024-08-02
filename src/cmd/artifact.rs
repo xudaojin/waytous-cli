@@ -4,11 +4,13 @@
  * File: artifact
  */
 
-use crate::subcommand_define;
 use colored::Colorize;
-use comfy_table::presets::{UTF8_FULL, UTF8_NO_BORDERS};
 use comfy_table::{ContentArrangement, Table};
+use comfy_table::presets::{UTF8_FULL, UTF8_NO_BORDERS};
+
 use crate::common;
+use crate::subcommand_define;
+
 pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
     match sub_cmd {
         subcommand_define::ArtifactCmds::Write { sub_cmd } => {
@@ -26,8 +28,6 @@ pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
         subcommand_define::ArtifactCmds::List { .. } => {}
         subcommand_define::ArtifactCmds::Rsync { .. } => {}
     }
-
-
 }
 
 
@@ -40,7 +40,6 @@ pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
 fn get_artifact_info(file: &str) {
     common::common::system("mender-artifact", vec!["read", file]);
     println!("{}", common::common::get_system_info().hostname);
-
 }
 
 /// 根据传入的参数来制作对应的 OTA 软件制品
@@ -54,10 +53,10 @@ fn get_artifact_info(file: &str) {
 /// Null
 fn write_module_image(type_value: &str, artifact_name: &str, device_type: &str, software_version: &str, files: &Vec<String>) {
 
-    /// 组装最终的制品文件名称
+    // 组装最终的制品文件名称
     let artifact_full_name = format!("{}.mender", artifact_name);
 
-    /// 组装打包所需的参数
+    // 组装打包所需的参数
     let mut command_args = vec![
         "write", "module-image",
         "-T", type_value,
@@ -67,13 +66,12 @@ fn write_module_image(type_value: &str, artifact_name: &str, device_type: &str, 
         "--software-version", software_version,
     ];
 
-    /// 添加需要打包的文件， 并在前面带上 -f， 然后插入到 command_args 中构成完整的参数组
     for file in files {
         command_args.push("-f");
         command_args.push(file);
     }
 
-    /// 执行制品打包命令
+    // 执行制品打包命令
     if common::common::system("mender-artifact", command_args) {
         println!("ddd");
         let mut table = Table::new();
@@ -90,8 +88,7 @@ fn write_module_image(type_value: &str, artifact_name: &str, device_type: &str, 
                 &files.join("\n"),
             ]);
         println!("{}", table.to_string().blue());
-    }else {
+    } else {
         println!("{}", "Error".red());
     }
-
 }

@@ -5,12 +5,14 @@
  */
 
 use colored::Colorize;
+use comfy_table::{ContentArrangement, Table};
 use comfy_table::modifiers::UTF8_ROUND_CORNERS;
 use comfy_table::presets::UTF8_FULL;
-use crate::{subcommand_define};
-use rusqlite::{params, Connection, Result};
-use comfy_table::{ContentArrangement, Table};
+use rusqlite::{Connection, params, Result};
+
 use crate::common;
+use crate::subcommand_define;
+
 pub fn module(sub_cmd: &subcommand_define::ModuleCmds) {
     match sub_cmd {
         subcommand_define::ModuleCmds::Create { name, no_demo } => { create(name, *no_demo); }
@@ -28,13 +30,14 @@ pub fn module(sub_cmd: &subcommand_define::ModuleCmds) {
 
 
 /// 获取当前系统中已经安装的自动驾驶系统模块列表
-fn get_installed_module_list() {
+fn get_installed_module_list() {}
 
-}
 fn create(name: &str, no_demo: bool) {
-        println!("{}", no_demo)
+    println!("{}", no_demo)
 }
+
 fn build(jobs: &u32) {}
+
 fn set_config(name: &Option<String>, version: &Option<String>, platform: &Option<String>, author: &Option<String>, description: &Option<String>) -> Result<()> {
     let conn = Connection::open("meta")?;
 
@@ -52,16 +55,14 @@ fn set_config(name: &Option<String>, version: &Option<String>, platform: &Option
         [],
     )?;
 
-    /// 检查 meta 是否为空, 如果为空， 则对其初始化
+     // 检查 meta 是否为空, 如果为空， 则对其初始化
     let count: i64 = conn.query_row("SELECT COUNT(*) FROM meta", [], |r| r.get(0))?;
     if count == 0 {
-
         match name {
             Some(name) => {
                 conn.execute("INSERT INTO meta (name) VALUES (?1)", params![name])?;
             }
-            None => {
-            }
+            None => {}
         }
 
         match version {
@@ -91,7 +92,6 @@ fn set_config(name: &Option<String>, version: &Option<String>, platform: &Option
             }
             None => {}
         }
-
     } else {
         if let Some(name) = name {
             conn.execute("UPDATE meta SET name = ?1 WHERE id = 1", params![name])?;
@@ -112,6 +112,7 @@ fn set_config(name: &Option<String>, version: &Option<String>, platform: &Option
 
     Ok(())
 }
+
 fn get_config_info() {
     match common::common::get_module_meta() {
         Ok(meta) => {
@@ -132,8 +133,7 @@ fn get_config_info() {
             println!("{}", table.to_string().blue())
         }
         Err(e) => {
-            println!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red() )
+            println!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red())
         }
     }
-
 }

@@ -5,24 +5,28 @@
  */
 
 use clap::{CommandFactory, Parser};
-use crate::subcommand_define;
+
 use crate::cmd;
+use crate::subcommand_define;
 
 /// 创建 Waytous 结构体， 用于解析命令行参数
 #[derive(Parser)]
-#[command(name = "waytous", version = "0.1.0", author = "daojin.xu101@gmail.com", about = "waytous")]
+#[command(
+    name = "waytous",
+    version = "0.1.0",
+    author = "daojin.xu101@gmail.com",
+    about = "waytous"
+)]
 pub struct Waytous {
-
     /// 创建 cmds 字段，用于存储解析的子命令
     #[command(subcommand)]
     pub cmds: Option<MainCmds>,
-    
+
 }
 
 /// 枚举定义主命令下的所有子命令
 #[derive(Parser)]
 pub enum MainCmds {
-
     #[command(about = "软件包的创建、编译、构建、打包等操作")]
     Module {
         /// 创建 sub_cmd 字段，用于存储解析的子命令
@@ -44,8 +48,7 @@ pub enum MainCmds {
     },
 
     #[command(about = "生成并配置 cli 的自动补全脚本")]
-    Autocompletion {}
-
+    Autocompletion {},
 }
 
 impl Waytous {
@@ -55,9 +58,9 @@ impl Waytous {
 
     pub fn run(&self) {
         match &self.cmds {
-            Some(MainCmds::Module { sub_cmd}) => { cmd::module::module(sub_cmd); }
-            Some(MainCmds::Package { sub_cmd}) => { cmd::package::package(sub_cmd); }
-            Some(MainCmds::Artifact { sub_cmd}) => { cmd::artifact::artifact(sub_cmd); }
+            Some(MainCmds::Module { sub_cmd }) => { cmd::module::module(sub_cmd); }
+            Some(MainCmds::Package { sub_cmd }) => { cmd::package::package(sub_cmd); }
+            Some(MainCmds::Artifact { sub_cmd }) => { cmd::artifact::artifact(sub_cmd); }
             Some(MainCmds::Autocompletion {}) => { cmd::autocompletion::GenerateAutoCompletion::process(); }
             None => { Waytous::command().print_help().unwrap() }
         }

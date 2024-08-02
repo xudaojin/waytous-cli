@@ -6,9 +6,9 @@
 
 
 use std::process::Command;
-use colored::Colorize;
-use rusqlite::{params, Connection, Result, Error};
 
+use colored::Colorize;
+use rusqlite::{Connection, Error, Result};
 
 /// 执行 shell 终端指令 并返回执行状态
 /// # Arguments
@@ -27,7 +27,7 @@ pub fn system(program: &str, parameter: Vec<&str>) -> bool {
     if output.status.success() {
         println!("{}", String::from_utf8(output.stdout).unwrap().to_string().blue());
         true
-    }else {
+    } else {
         println!("{}", String::from_utf8(output.stderr).unwrap().to_string().red());
         false
     }
@@ -42,10 +42,9 @@ pub fn system_ret(program: &str, parameter: Vec<&str>) -> String {
 
     if output.status.success() {
         String::from_utf8(output.stdout).unwrap().to_string()
-    }else {
+    } else {
         String::from_utf8(output.stderr).unwrap().to_string()
     }
-
 }
 
 /// 获取系统信息
@@ -68,10 +67,10 @@ pub struct SystemInfo {
 /// # Return
 /// SystemInfo - 系统信息
 pub fn get_system_info() -> SystemInfo {
-    let  code_name = system_ret("lsb_release", vec!["-c", "-s"]);
-    let  release = system_ret("lsb_release", vec!["-r", "-s"]);
-    let  architecture = system_ret("uname", vec!["-m"]);
-    let  hostname = system_ret("hostname", vec!["-s"]);
+    let code_name = system_ret("lsb_release", vec!["-c", "-s"]);
+    let release = system_ret("lsb_release", vec!["-r", "-s"]);
+    let architecture = system_ret("uname", vec!["-m"]);
+    let hostname = system_ret("hostname", vec!["-s"]);
 
     SystemInfo {
         code_name,

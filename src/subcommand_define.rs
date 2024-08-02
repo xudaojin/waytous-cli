@@ -4,16 +4,13 @@
  * File: subcommand_define
  */
 
-use std::pin::pin;
 use clap::Parser;
 
 /// 枚举定义 module 命令下的所有子命令
 #[derive(Parser)]
 pub enum ModuleCmds {
-
     #[command(about = "创建一个模块的目录结构")]
     Create {
-
         #[arg(long, required = true, help = "模块名称")]
         name: String,
 
@@ -87,7 +84,7 @@ pub enum PackageCmds {
     },
 
     #[command(about = "卸载指定或者所有的自动驾驶系统软件包")]
-    Uninstall{
+    Uninstall {
         #[arg(short, long, help = "需要卸载的软件包名称")]
         name: Option<String>,
 
@@ -96,19 +93,18 @@ pub enum PackageCmds {
     },
 
     #[command(about = "获取指定软件包的详细信息")]
-    Info{
+    Info {
         #[arg(short, long, help = "需要获取的软件包名称")]
         name: Option<String>,
 
         #[arg(short, long, help = "获取当前系统所有的软件包信息")]
         all: Option<bool>,
-    }
+    },
 }
 
 /// 枚举定义 waytous artifact 命令下的所有子命令
 #[derive(Parser)]
 pub enum ArtifactCmds {
-
     #[command(about = "创建一个用于 OTA 升级的制品")]
     Write {
         #[command(subcommand)]
@@ -122,49 +118,36 @@ pub enum ArtifactCmds {
     },
 
     #[command(about = "在当前环境下安装指定的 OTA 制品")]
-    Install {
-
-    },
+    Install {},
 
     #[command(about = "修改指定的 OTA 制品")]
-    Modify {
-
-    },
+    Modify {},
 
     #[command(about = "拷贝指定的 OTA 制品到知道你的位置")]
-    Cp {
-
-    },
+    Cp {},
 
     #[command(about = "列出指定 OTA 制品仓库中的所有制品")]
-    List {
-
-    },
+    List {},
 
     #[command(about = "同步 OTA 制品到本地或云端制品仓库")]
-    Rsync {
-
-    },
+    Rsync {},
 }
 
 
 /// 枚举定义 waytous artifact write 命令下的所有子命令
 #[derive(Parser)]
 pub enum WriteSubCmd {
-
     #[command(about = "创建一个模块类型的 OTA 制品")]
     ModuleImage {
-
-        #[arg(short='T',long, value_parser= ["deb", "run"], help = "指定模块类型")]
+        #[arg(short = 'T', long, value_parser = ["deb", "run"], help = "指定模块类型")]
         type_value: String,
 
-        #[arg(short='n', long, help = "生成的制品名称, 格式: 软件包名称-平台-架构-版本号-类型")]
+        #[arg(short = 'n', long, help = "生成的制品名称, 格式: 软件包名称-平台-架构-版本号-类型")]
         artifact_name: String,
-
 
         #[arg(
             long,
-            value_parser=[
+            value_parser = [
             "x86_64-bionic",
             "x86_64-focal",
             "aarch64-bionic",
@@ -176,19 +159,15 @@ pub enum WriteSubCmd {
         #[arg(long, help = "软件版本号, ex: 1.0.0")]
         software_version: String,
 
-        #[arg(short, long, num_args = 1.., value_delimiter = ' ',  help = "打包的文件")]
+        #[arg(short, long, num_args = 1.., value_delimiter = ' ', help = "打包的文件")]
         files: Vec<String>,
     },
 
     #[command(about = "创建一个带有启动引导项的 image OTA 制品")]
-    Boostrap {
-
-    },
+    Boostrap {},
 
     #[command(about = "创建一个带有 rootfs 磁盘映像的 image OTA 制品")]
-    RootfsImage {
-
-    },
+    RootfsImage {},
 }
 
 
@@ -196,52 +175,38 @@ pub enum WriteSubCmd {
 #[derive(Parser)]
 pub enum DeployCmds {
     #[command(about = "在当前系统部署自动驾驶所需的基础依赖环境")]
-    Deps {
-
-    },
+    Deps {},
 }
 
 /// 枚举定义 waytous init 命令下的所有子命令
 #[derive(Parser)]
 pub enum InitCmds {
-
     #[command(about = "初始化当前系统的一些硬件接口， 如[CAN NET Serial] 等")]
     Interface {
-
         #[command(subcommand)]
         sub_cmd: InterfaceSubCmd,
     },
 
     #[command(about = "初始化当前系统的一些公共配置")]
     Config {
-
         #[command(subcommand)]
         sub_cmd: ConfigSubCmd,
-    }
+    },
 }
 
 /// 枚举定义 waytous init interface 命令下的所有子命令
 #[derive(Parser)]
 pub enum InterfaceSubCmd {
-
     #[command(about = "初始化指定的 CAN 接口")]
-    Can {
-
-    },
+    Can {},
 
     #[command(about = "初始化指定的网络接口")]
-    Net {
-
-    },
+    Net {},
 
     #[command(about = "初始化指定的串口接口")]
-    Serial {
-
-    },
+    Serial {},
 }
 
 /// 枚举定义 waytous init config 命令下的所有子命令
 #[derive(Parser)]
-pub enum ConfigSubCmd {
-
-}
+pub enum ConfigSubCmd {}
