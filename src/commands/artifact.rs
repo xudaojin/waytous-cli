@@ -4,11 +4,10 @@
  * File: artifact
  */
 
-use colored::Colorize;
 use comfy_table::{ContentArrangement, Table};
 use comfy_table::presets::{UTF8_FULL, UTF8_NO_BORDERS};
 
-use crate::common;
+use crate::{common, print_error_format, print_info_format};
 use crate::subcommand_define;
 
 pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
@@ -38,8 +37,7 @@ pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
 /// Null
 ///
 fn get_artifact_info(file: &str) {
-    common::common::system("mender-artifact", vec!["read", file]);
-    println!("{}", common::common::get_system_info().hostname);
+    print_error_format!("{}", common::common::system_ret("mender-artifact", vec!["read", file]));
 }
 
 /// 根据传入的参数来制作对应的 OTA 软件制品
@@ -50,7 +48,7 @@ fn get_artifact_info(file: &str) {
 /// * software_version - 软件版本
 /// * files - 需要打包的文件列表
 /// # Return
-/// Null
+/// * Null
 fn write_module_image(type_value: &str, artifact_name: &str, device_type: &str, software_version: &str, files: &Vec<String>) {
 
     // 组装最终的制品文件名称
@@ -66,14 +64,15 @@ fn write_module_image(type_value: &str, artifact_name: &str, device_type: &str, 
         "--software-version", software_version,
     ];
 
+    // 组装传入的文件列表并写入到打包命令中
     for file in files {
         command_args.push("-f");
         command_args.push(file);
     }
 
     // 执行制品打包命令
+    print_info_format!("{}", "正在制作制品文件...");
     if common::common::system("mender-artifact", command_args) {
-        println!("ddd");
         let mut table = Table::new();
         table
             .load_preset(UTF8_FULL)
@@ -87,8 +86,10 @@ fn write_module_image(type_value: &str, artifact_name: &str, device_type: &str, 
                 software_version,
                 &files.join("\n"),
             ]);
-        println!("{}", table.to_string().blue());
+        print_info_format!("{}", "制品文件制作完成");
+        print_info_format!("{}", table.to_string());
     } else {
-        println!("{}", "Error".red());
+        print_error_format!("{} 制品文件制作失败", artifact_name);
     }
+
 }

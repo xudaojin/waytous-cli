@@ -27,6 +27,7 @@ pub enum ModuleCmds {
     #[command(about = "设置当前模块的信息[名称、版本号、平台、作者、描述] 等")]
     Set {
         #[arg(long, help = "模块名称")]
+
         name: Option<String>,
 
         #[arg(long, help = "模块版本号")]

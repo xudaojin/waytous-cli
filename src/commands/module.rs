@@ -4,13 +4,12 @@
  * File: module
  */
 
-use colored::Colorize;
 use comfy_table::{ContentArrangement, Table};
 use comfy_table::modifiers::UTF8_ROUND_CORNERS;
 use comfy_table::presets::UTF8_FULL;
 use rusqlite::{Connection, params, Result};
 
-use crate::common;
+use crate::{common, print_error_format, print_info_format};
 use crate::subcommand_define;
 
 pub fn module(sub_cmd: &subcommand_define::ModuleCmds) {
@@ -18,6 +17,7 @@ pub fn module(sub_cmd: &subcommand_define::ModuleCmds) {
         subcommand_define::ModuleCmds::Create { name, no_demo } => { create(name, *no_demo); }
         subcommand_define::ModuleCmds::Build { jobs } => { build(jobs); }
         subcommand_define::ModuleCmds::Set { name, version, platform, author, description } => { set_config(name, version, platform, author, description).expect("TODO: panic message"); }
+        subcommand_define::ModuleCmds::List { .. } => { print_installed_module_list(); }
         subcommand_define::ModuleCmds::Get { sub_cmd } => {
             match sub_cmd {
                 subcommand_define::GetSubCmd::Info { .. } => {
@@ -30,24 +30,25 @@ pub fn module(sub_cmd: &subcommand_define::ModuleCmds) {
 
 
 /// 获取当前系统中已经安装的自动驾驶系统模块列表
-fn get_installed_module_list() {}
+/// # Argment
+/// * 'Null'
+///  # Return
+///  * 'Null'
+fn print_installed_module_list() {
+    print_info_format!("TODO: print installed module list");
+}
 
 fn create(name: &str, no_demo: bool) {
-    println!("{}", no_demo)
+    print_info_format!("创建 {}, demo: {}", name, no_demo);
 }
 
-fn build(jobs: &u32) {}
-
-
-/// 获取当前系统中已经安装的自动驾驶系统模块列表
-fn print_all_module_list() {
-
+fn build(jobs: &u32) {
+    print_info_format!("{}", jobs);
 }
+
 
 fn set_config(name: &Option<String>, version: &Option<String>, platform: &Option<String>, author: &Option<String>, description: &Option<String>) -> Result<()> {
-    let mut conn = Connection::open("meta.db")?;
-
-    conn.execute_batch("PRAGMA key = 'test1234567890';")?;
+    let mut conn = Connection::open(common::common::MODULE_META_DATA_DB)?;
 
     // 创建表，如果表不存在
     conn.execute(
@@ -117,12 +118,12 @@ fn get_config_info() {
                 meta.author.as_deref().unwrap_or("未定义"),
                 meta.description.as_deref().unwrap_or("未定义"),
             ]);
-            println!("{}", table.to_string().blue())
+            print_info_format!("{}", table.to_string().blue())
         }
         Err(e) => {
-            println!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red());
+            print_error_format!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red());
             table.add_row(vec!["未定义", "未定义", "未定义", "未定义", "未定义"]);
-            println!("{}", table.to_string().red())
+            print_error_format!("{}", table.to_string().red());
         }
     }
 }

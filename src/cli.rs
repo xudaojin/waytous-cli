@@ -1,23 +1,27 @@
 /*
  * Author: daojin.xu101@gmail.com
  * Date: 24-7-30
- * File: waytous
+ * File: cli
  */
 
-use clap::{CommandFactory, Parser};
-
-use crate::cmd;
+use clap::{ColorChoice, CommandFactory, Parser};
+use crate::commands;
 use crate::subcommand_define;
+use color_print::cstr;
 
-/// 创建 Waytous 结构体， 用于解析命令行参数
+/// 创建 cli 结构体， 用于解析命令行参数
 #[derive(Parser)]
 #[command(
     name = "waytous",
     version = "0.1.0",
     author = "daojin.xu101@gmail.com",
-    about = "waytous"
+    about = "waytous",
+    setting = AppSettings::ColoredHelp,
+
+
+
 )]
-pub struct Waytous {
+pub struct Cli {
     /// 创建 cmds 字段，用于存储解析的子命令
     #[command(subcommand)]
     pub cmds: Option<MainCmds>,
@@ -27,7 +31,7 @@ pub struct Waytous {
 /// 枚举定义主命令下的所有子命令
 #[derive(Parser)]
 pub enum MainCmds {
-    #[command(about = "软件包的创建、编译、构建、打包等操作")]
+    #[command(about = "软件包的创建、编译、构建、打包等操作", color = ColorChoice::Never)]
     Module {
         /// 创建 sub_cmd 字段，用于存储解析的子命令
         #[command(subcommand)]
@@ -45,17 +49,19 @@ pub enum MainCmds {
     Autocompletion {},
 }
 
-impl Waytous {
+impl Cli {
     pub fn new() -> Self {
-        Waytous::parse()
+        Cli::parse()
     }
 
     pub fn run(&self) {
         match &self.cmds {
-            Some(MainCmds::Module { sub_cmd }) => { cmd::module::module(sub_cmd); }
-            Some(MainCmds::Artifact { sub_cmd }) => { cmd::artifact::artifact(sub_cmd); }
-            Some(MainCmds::Autocompletion {}) => { cmd::autocompletion::GenerateAutoCompletion::process(); }
-            None => { Waytous::command().print_help().unwrap() }
+            Some(MainCmds::Module { sub_cmd }) => { commands::module::module(sub_cmd); }
+            Some(MainCmds::Artifact { sub_cmd }) => { commands::artifact::artifact(sub_cmd); }
+            Some(MainCmds::Autocompletion {}) => { commands::autocompletion::GenerateAutoCompletion::process(); }
+            None => {
+                println!("{}", Cli::command().render_help())
+            }
         }
     }
 }

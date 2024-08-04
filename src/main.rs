@@ -1,14 +1,11 @@
-extern crate colored;
+use crate::cli::Cli;
 
-use crate::waytous::Waytous;
-
-
-mod waytous;
+mod cli;
 mod subcommand_define;
-mod cmd;
+mod commands;
 mod common;
 
 fn main() {
-    let app = Waytous::new();
+    let app = Cli::new();
     app.run();
 }

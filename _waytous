@@ -116,6 +116,12 @@ esac
     ;;
 esac
 ;;
+(list)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
 (help)
 _arguments "${_arguments_options[@]}" : \
 ":: :_waytous__module__help_commands" \
@@ -160,107 +166,7 @@ _arguments "${_arguments_options[@]}" : \
     ;;
 esac
 ;;
-(help)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-        esac
-    ;;
-esac
-;;
-        esac
-    ;;
-esac
-;;
-(package)
-_arguments "${_arguments_options[@]}" : \
-'-h[Print help]' \
-'--help[Print help]' \
-":: :_waytous__package_commands" \
-"*::: :->package" \
-&& ret=0
-
-    case $state in
-    (package)
-        words=($line[1] "${words[@]}")
-        (( CURRENT += 1 ))
-        curcontext="${curcontext%:*:*}:waytous-package-command-$line[1]:"
-        case $line[1] in
-            (list)
-_arguments "${_arguments_options[@]}" : \
-'-h[Print help]' \
-'--help[Print help]' \
-&& ret=0
-;;
-(install)
-_arguments "${_arguments_options[@]}" : \
-'-n+[需要安装的软件包名称]:NAME: ' \
-'--name=[需要安装的软件包名称]:NAME: ' \
-'-v+[指定安装的软件包版本号, 如果未指定则安装最新版本]:VERSION: ' \
-'--version=[指定安装的软件包版本号, 如果未指定则安装最新版本]:VERSION: ' \
-'-h[Print help]' \
-'--help[Print help]' \
-&& ret=0
-;;
-(upgrade)
-_arguments "${_arguments_options[@]}" : \
-'-n+[需要更新的软件包名称]:NAME: ' \
-'--name=[需要更新的软件包名称]:NAME: ' \
-'-a+[更新当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
-'--all=[更新当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
-'-h[Print help]' \
-'--help[Print help]' \
-&& ret=0
-;;
-(uninstall)
-_arguments "${_arguments_options[@]}" : \
-'-n+[需要卸载的软件包名称]:NAME: ' \
-'--name=[需要卸载的软件包名称]:NAME: ' \
-'-a+[卸载当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
-'--all=[卸载当前系统所有的自动驾驶系统软件包]:ALL:(true false)' \
-'-h[Print help]' \
-'--help[Print help]' \
-&& ret=0
-;;
-(info)
-_arguments "${_arguments_options[@]}" : \
-'-n+[需要获取的软件包名称]:NAME: ' \
-'--name=[需要获取的软件包名称]:NAME: ' \
-'-a+[获取当前系统所有的软件包信息]:ALL:(true false)' \
-'--all=[获取当前系统所有的软件包信息]:ALL:(true false)' \
-'-h[Print help]' \
-'--help[Print help]' \
-&& ret=0
-;;
-(help)
-_arguments "${_arguments_options[@]}" : \
-":: :_waytous__package__help_commands" \
-"*::: :->help" \
-&& ret=0
-
-    case $state in
-    (help)
-        words=($line[1] "${words[@]}")
-        (( CURRENT += 1 ))
-        curcontext="${curcontext%:*:*}:waytous-package-help-command-$line[1]:"
-        case $line[1] in
-            (list)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(install)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(upgrade)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(uninstall)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(info)
+(list)
 _arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
@@ -542,39 +448,7 @@ _arguments "${_arguments_options[@]}" : \
     ;;
 esac
 ;;
-        esac
-    ;;
-esac
-;;
-(package)
-_arguments "${_arguments_options[@]}" : \
-":: :_waytous__help__package_commands" \
-"*::: :->package" \
-&& ret=0
-
-    case $state in
-    (package)
-        words=($line[1] "${words[@]}")
-        (( CURRENT += 1 ))
-        curcontext="${curcontext%:*:*}:waytous-help-package-command-$line[1]:"
-        case $line[1] in
-            (list)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(install)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(upgrade)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(uninstall)
-_arguments "${_arguments_options[@]}" : \
-&& ret=0
-;;
-(info)
+(list)
 _arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
@@ -671,7 +545,6 @@ esac
 _waytous_commands() {
     local commands; commands=(
 'module:软件包的创建、编译、构建、打包等操作' \
-'package:自动驾驶系统软件包的一系列操作' \
 'artifact:OTA 制品的创建、读取、安装、拷贝、同步、修改等操作' \
 'autocompletion:生成并配置 cli 的自动补全脚本' \
 'help:Print this message or the help of the given subcommand(s)' \
@@ -859,7 +732,6 @@ _waytous__autocompletion_commands() {
 _waytous__help_commands() {
     local commands; commands=(
 'module:软件包的创建、编译、构建、打包等操作' \
-'package:自动驾驶系统软件包的一系列操作' \
 'artifact:OTA 制品的创建、读取、安装、拷贝、同步、修改等操作' \
 'autocompletion:生成并配置 cli 的自动补全脚本' \
 'help:Print this message or the help of the given subcommand(s)' \
@@ -950,6 +822,7 @@ _waytous__help__module_commands() {
 'build:构建当前模块' \
 'set:设置当前模块的信息\[名称、版本号、平台、作者、描述\] 等' \
 'get:获取指定模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'list:列出当前系统中已经安装的所有模块' \
     )
     _describe -t commands 'waytous help module commands' commands "$@"
 }
@@ -975,46 +848,15 @@ _waytous__help__module__get__info_commands() {
     local commands; commands=()
     _describe -t commands 'waytous help module get info commands' commands "$@"
 }
+(( $+functions[_waytous__help__module__list_commands] )) ||
+_waytous__help__module__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous help module list commands' commands "$@"
+}
 (( $+functions[_waytous__help__module__set_commands] )) ||
 _waytous__help__module__set_commands() {
     local commands; commands=()
     _describe -t commands 'waytous help module set commands' commands "$@"
-}
-(( $+functions[_waytous__help__package_commands] )) ||
-_waytous__help__package_commands() {
-    local commands; commands=(
-'list:列出当前系统已安装的自动驾驶系统软件包' \
-'install:安装指定自动驾驶系统软件包' \
-'upgrade:更新指定或者所有的自动驾驶系统软件包' \
-'uninstall:卸载指定或者所有的自动驾驶系统软件包' \
-'info:获取指定软件包的详细信息' \
-    )
-    _describe -t commands 'waytous help package commands' commands "$@"
-}
-(( $+functions[_waytous__help__package__info_commands] )) ||
-_waytous__help__package__info_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous help package info commands' commands "$@"
-}
-(( $+functions[_waytous__help__package__install_commands] )) ||
-_waytous__help__package__install_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous help package install commands' commands "$@"
-}
-(( $+functions[_waytous__help__package__list_commands] )) ||
-_waytous__help__package__list_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous help package list commands' commands "$@"
-}
-(( $+functions[_waytous__help__package__uninstall_commands] )) ||
-_waytous__help__package__uninstall_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous help package uninstall commands' commands "$@"
-}
-(( $+functions[_waytous__help__package__upgrade_commands] )) ||
-_waytous__help__package__upgrade_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous help package upgrade commands' commands "$@"
 }
 (( $+functions[_waytous__module_commands] )) ||
 _waytous__module_commands() {
@@ -1023,6 +865,7 @@ _waytous__module_commands() {
 'build:构建当前模块' \
 'set:设置当前模块的信息\[名称、版本号、平台、作者、描述\] 等' \
 'get:获取指定模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'list:列出当前系统中已经安装的所有模块' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'waytous module commands' commands "$@"
@@ -1075,6 +918,7 @@ _waytous__module__help_commands() {
 'build:构建当前模块' \
 'set:设置当前模块的信息\[名称、版本号、平台、作者、描述\] 等' \
 'get:获取指定模块的信息\[名称、版本号、平台、作者、描述\] 等' \
+'list:列出当前系统中已经安装的所有模块' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'waytous module help commands' commands "$@"
@@ -1106,94 +950,25 @@ _waytous__module__help__help_commands() {
     local commands; commands=()
     _describe -t commands 'waytous module help help commands' commands "$@"
 }
+(( $+functions[_waytous__module__help__list_commands] )) ||
+_waytous__module__help__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module help list commands' commands "$@"
+}
 (( $+functions[_waytous__module__help__set_commands] )) ||
 _waytous__module__help__set_commands() {
     local commands; commands=()
     _describe -t commands 'waytous module help set commands' commands "$@"
 }
+(( $+functions[_waytous__module__list_commands] )) ||
+_waytous__module__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'waytous module list commands' commands "$@"
+}
 (( $+functions[_waytous__module__set_commands] )) ||
 _waytous__module__set_commands() {
     local commands; commands=()
     _describe -t commands 'waytous module set commands' commands "$@"
-}
-(( $+functions[_waytous__package_commands] )) ||
-_waytous__package_commands() {
-    local commands; commands=(
-'list:列出当前系统已安装的自动驾驶系统软件包' \
-'install:安装指定自动驾驶系统软件包' \
-'upgrade:更新指定或者所有的自动驾驶系统软件包' \
-'uninstall:卸载指定或者所有的自动驾驶系统软件包' \
-'info:获取指定软件包的详细信息' \
-'help:Print this message or the help of the given subcommand(s)' \
-    )
-    _describe -t commands 'waytous package commands' commands "$@"
-}
-(( $+functions[_waytous__package__help_commands] )) ||
-_waytous__package__help_commands() {
-    local commands; commands=(
-'list:列出当前系统已安装的自动驾驶系统软件包' \
-'install:安装指定自动驾驶系统软件包' \
-'upgrade:更新指定或者所有的自动驾驶系统软件包' \
-'uninstall:卸载指定或者所有的自动驾驶系统软件包' \
-'info:获取指定软件包的详细信息' \
-'help:Print this message or the help of the given subcommand(s)' \
-    )
-    _describe -t commands 'waytous package help commands' commands "$@"
-}
-(( $+functions[_waytous__package__help__help_commands] )) ||
-_waytous__package__help__help_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package help help commands' commands "$@"
-}
-(( $+functions[_waytous__package__help__info_commands] )) ||
-_waytous__package__help__info_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package help info commands' commands "$@"
-}
-(( $+functions[_waytous__package__help__install_commands] )) ||
-_waytous__package__help__install_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package help install commands' commands "$@"
-}
-(( $+functions[_waytous__package__help__list_commands] )) ||
-_waytous__package__help__list_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package help list commands' commands "$@"
-}
-(( $+functions[_waytous__package__help__uninstall_commands] )) ||
-_waytous__package__help__uninstall_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package help uninstall commands' commands "$@"
-}
-(( $+functions[_waytous__package__help__upgrade_commands] )) ||
-_waytous__package__help__upgrade_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package help upgrade commands' commands "$@"
-}
-(( $+functions[_waytous__package__info_commands] )) ||
-_waytous__package__info_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package info commands' commands "$@"
-}
-(( $+functions[_waytous__package__install_commands] )) ||
-_waytous__package__install_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package install commands' commands "$@"
-}
-(( $+functions[_waytous__package__list_commands] )) ||
-_waytous__package__list_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package list commands' commands "$@"
-}
-(( $+functions[_waytous__package__uninstall_commands] )) ||
-_waytous__package__uninstall_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package uninstall commands' commands "$@"
-}
-(( $+functions[_waytous__package__upgrade_commands] )) ||
-_waytous__package__upgrade_commands() {
-    local commands; commands=()
-    _describe -t commands 'waytous package upgrade commands' commands "$@"
 }
 
 if [ "$funcstack[1]" = "_waytous" ]; then
