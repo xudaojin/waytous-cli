@@ -13,7 +13,7 @@ use clap::CommandFactory;
 use clap_complete::generate_to;
 use clap_complete::Shell::Bash;
 
-use crate::cli;
+use crate::{cli, print_error_msg, print_info_msg};
 
 pub struct GenerateAutoCompletion;
 
@@ -43,6 +43,7 @@ impl GenerateAutoCompletion {
         }
 
         // 开始生成 自动补全脚本
+        print_info_msg!("开始生成自动补全脚本...");
         generate_to(Bash, &mut app, "waytous", &autocompletion_dir).expect("ailed to generate bash completion");
 
         // 检查 .bashrc 文件内是否包含的自动补全脚本的引用命令, 存在则不写入
@@ -54,6 +55,7 @@ impl GenerateAutoCompletion {
 
             writeln!(bashrc_file, "\n{}\n", autocompletion_line).expect("failed to write bashrc");
         }
+        print_info_msg!("配置完成, 请执行 source ~/.bashrc 命令 或重启终端使=自动补全生效");
     }
 
     // 检查文件中是否包含指定的行

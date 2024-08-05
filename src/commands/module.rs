@@ -9,7 +9,7 @@ use comfy_table::modifiers::UTF8_ROUND_CORNERS;
 use comfy_table::presets::UTF8_FULL;
 use rusqlite::{Connection, params, Result};
 
-use crate::{common, print_error_format, print_info_format};
+use crate::{common, print_error_msg, print_info_msg};
 use crate::subcommand_define;
 
 pub fn module(sub_cmd: &subcommand_define::ModuleCmds) {
@@ -35,15 +35,15 @@ pub fn module(sub_cmd: &subcommand_define::ModuleCmds) {
 ///  # Return
 ///  * 'Null'
 fn print_installed_module_list() {
-    print_info_format!("TODO: print installed module list");
+    print_info_msg!("TODO: print installed module list");
 }
 
 fn create(name: &str, no_demo: bool) {
-    print_info_format!("创建 {}, demo: {}", name, no_demo);
+    print_info_msg!("创建 {}, demo: {}", name, no_demo);
 }
 
 fn build(jobs: &u32) {
-    print_info_format!("{}", jobs);
+    print_info_msg!("{}", jobs);
 }
 
 
@@ -118,12 +118,12 @@ fn get_config_info() {
                 meta.author.as_deref().unwrap_or("未定义"),
                 meta.description.as_deref().unwrap_or("未定义"),
             ]);
-            print_info_format!("{}", table.to_string().blue())
+            print_info_msg!("{}", table.to_string().blue())
         }
         Err(e) => {
-            print_error_format!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red());
+            print_error_msg!("{}{}", "读取模块元数据时出错: ".red(), e.to_string().red());
             table.add_row(vec!["未定义", "未定义", "未定义", "未定义", "未定义"]);
-            print_error_format!("{}", table.to_string().red());
+            print_error_msg!("{}", table.to_string().red());
         }
     }
 }

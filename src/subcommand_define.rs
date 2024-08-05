@@ -105,22 +105,14 @@ pub enum WriteSubCmd {
         #[arg(short = 'T', long, value_parser = ["deb", "run"], help = "指定模块类型")]
         type_value: String,
 
-        #[arg(short = 'n', long, help = "生成的制品名称, 格式: 软件包名称-平台-架构-版本号-类型")]
+        #[arg(short = 'n', long, help = "制品名称, 格式: ht-truck")]
         artifact_name: String,
-
-        #[arg(
-            long,
-            value_parser = [
-            "x86_64-bionic",
-            "x86_64-focal",
-            "aarch64-bionic",
-            "aarch64-focal",],
-            help = "平台架构"
-        )]
-        device_type: String,
 
         #[arg(long, help = "软件版本号, ex: 1.0.0")]
         software_version: String,
+
+        #[arg(long, value_parser = ["release", "debug"], default_value_t = String::from("release"),  help = "制品类型")]
+        mode: String,
 
         #[arg(short, long, num_args = 1.., value_delimiter = ' ', help = "打包的文件")]
         files: Vec<String>,

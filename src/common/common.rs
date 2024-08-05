@@ -7,6 +7,7 @@
 
 use std::process::Command;
 use std::string::String;
+use colored::Colorize;
 
 use rusqlite::{Connection, Error, Result};
 
@@ -16,17 +17,17 @@ pub static MODULE_META_DATA_DB: &str = "package.db";
 
 /// 打印 info 信息
 #[macro_export]
-macro_rules! print_info_format {
+macro_rules! print_info_msg {
     ($($arg:tt)*) => {{
         use colored::Colorize; // 在宏内部导入 Colorize trait
         let formatted_string = format!($($arg)*); // 使用 format! 直接生成字符串
-        println!("{}", formatted_string.blue());
+        println!("{}", formatted_string.green());
     }};
 }
 
 /// 打印 error 信息
 #[macro_export]
-macro_rules! print_error_format {
+macro_rules! print_error_msg {
     ($($arg:tt)*) => {{
         use colored::Colorize; // 在宏内部导入 Colorize trait
         let formatted_string = format!($($arg)*); // 使用 format! 直接生成字符串
@@ -36,11 +37,28 @@ macro_rules! print_error_format {
 
 /// 打印 warning 信息
 #[macro_export]
-macro_rules! print_warning_format {
+macro_rules! print_warning_msg {
     ($($arg:tt)*) => {{
         use colored::Colorize; // 在宏内部导入 Colorize trait
         let formatted_string = format!($($arg)*); // 使用 format! 直接生成字符串
         println!("{}", formatted_string.yellow());
+    }};
+}
+#[macro_export]
+macro_rules! print_debug_msg {
+    ($($arg:tt)*) => {{
+        use colored::Colorize; // 在宏内部导入 Colorize trait
+        let formatted_string = format!($($arg)*); // 使用 format! 直接生成字符串
+        println!("{}", formatted_string.blue());
+    }};
+}
+
+#[macro_export]
+macro_rules! print_tips_msg {
+    ($($arg:tt)*) => {{
+        use colored::Colorize; // 在宏内部导入 Colorize trait
+        let formatted_string = format!($($arg)*); // 使用 format! 直接生成字符串
+        println!("{}", formatted_string.cyan());
     }};
 }
 
@@ -94,12 +112,12 @@ pub fn system(program: &str, parameter: Vec<&str>) -> bool {
                 true // 返回 true，指示命令执行成功
             } else {
                 // 打印标准错误，并使用红色
-                print_error_format!("{}", &String::from_utf8(output.stderr).unwrap());
+                print_error_msg!("{}", &String::from_utf8(output.stderr).unwrap());
                 false // 返回 false，指示命令执行失败
             }
         },
         Err(e) => {
-            print_error_format!("无法执行命令: {}\n错误信息: {}", program, e);
+            print_error_msg!("无法执行命令: {}\n错误信息: {}", program, e);
             false // 返回 false，指示命令执行失败
         }
     }
@@ -129,11 +147,11 @@ pub fn system_ret(program: &str, parameter: Vec<&str>) -> String {
 /// # Return
 /// SystemInfo - 系统信息
 pub fn get_system_info() -> SystemInfo {
-    let code_name = system_ret("lsb_release", vec!["-c", "-s"]);
-    let release = system_ret("lsb_release", vec!["-r", "-s"]);
-    let architecture = system_ret("uname", vec!["-m"]);
-    let hostname = system_ret("hostname", vec!["-s"]);
-    let kernel_version = system_ret("uname", vec!["-r"]);
+    let code_name = system_ret("lsb_release", vec!["-c", "-s"]).to_string().replace("\n", "");
+    let release = system_ret("lsb_release", vec!["-r", "-s"]).to_string().replace("\n", "");
+    let architecture = system_ret("uname", vec!["-m"]).to_string().replace("\n", "");
+    let hostname = system_ret("hostname", vec!["-s"]).to_string().replace("\n", "");
+    let kernel_version = system_ret("uname", vec!["-r"]).to_string().replace("\n", "");
     SystemInfo {
         code_name,
         release,

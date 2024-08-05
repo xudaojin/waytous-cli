@@ -16,10 +16,6 @@ use color_print::cstr;
     version = "0.1.0",
     author = "daojin.xu101@gmail.com",
     about = "waytous",
-    setting = AppSettings::ColoredHelp,
-
-
-
 )]
 pub struct Cli {
     /// 创建 cmds 字段，用于存储解析的子命令
