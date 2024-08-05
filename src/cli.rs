@@ -7,7 +7,6 @@
 use clap::{ColorChoice, CommandFactory, Parser};
 use crate::commands;
 use crate::subcommand_define;
-use color_print::cstr;
 
 /// 创建 cli 结构体， 用于解析命令行参数
 #[derive(Parser)]

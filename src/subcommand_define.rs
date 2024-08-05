@@ -24,10 +24,29 @@ pub enum ModuleCmds {
         jobs: u32,
     },
 
-    #[command(about = "设置当前模块的信息[名称、版本号、平台、作者、描述] 等")]
+    #[command(about = "设置或查看当前模块的配置信息")]
+    Config {
+        #[command(subcommand)]
+        sub_cmd: ConfigSubCmd,
+    },
+
+    #[command(about = "获取指定模块的信息[名称、版本号、平台、作者、描述] 等")]
+    Get {
+        #[command(subcommand)]
+        sub_cmd: GetSubCmd,
+    },
+
+    #[command(about = "列出当前系统中已经安装的所有模块")]
+    List {},
+}
+
+/// 枚举定义 module config 命令下的所有子命令
+#[derive(Parser)]
+pub enum ConfigSubCmd {
+
+    #[command(about = "设置当前模块的配置信息")]
     Set {
         #[arg(long, help = "模块名称")]
-
         name: Option<String>,
 
         #[arg(long, help = "模块版本号")]
@@ -43,16 +62,10 @@ pub enum ModuleCmds {
         description: Option<String>,
     },
 
-    #[command(about = "获取指定模块的信息[名称、版本号、平台、作者、描述] 等")]
+    #[command(about = "获取当前模块的配置信息")]
     Get {
-        #[command(subcommand)]
-        sub_cmd: GetSubCmd,
+
     },
-
-    #[command(about = "列出当前系统中已经安装的所有模块")]
-    List {},
-
-    
 }
 
 
@@ -61,7 +74,6 @@ pub enum ModuleCmds {
 pub enum GetSubCmd {
     #[command(about = "获取当前模块的详细信息")]
     Info {},
-
 }
 
 
@@ -161,7 +173,3 @@ pub enum InterfaceSubCmd {
     #[command(about = "初始化指定的串口接口")]
     Serial {},
 }
-
-/// 枚举定义 waytous init config 命令下的所有子命令
-#[derive(Parser)]
-pub enum ConfigSubCmd {}

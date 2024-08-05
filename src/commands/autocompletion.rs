@@ -13,7 +13,7 @@ use clap::CommandFactory;
 use clap_complete::generate_to;
 use clap_complete::Shell::Bash;
 
-use crate::{cli, print_error_msg, print_info_msg};
+use crate::{cli, print_info_msg};
 
 pub struct GenerateAutoCompletion;
 
