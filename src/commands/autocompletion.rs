@@ -29,7 +29,8 @@ impl GenerateAutoCompletion {
         let bashrc_file_path = PathBuf::from(&home_dir).join(".bashrc");
 
         // 定义自动补全脚本路径
-        let autocompletion_file_path = PathBuf::from(&home_dir).join(".bash_completion.d/waytous.bash");
+        let autocompletion_file_path =
+            PathBuf::from(&home_dir).join(".bash_completion.d/waytous.bash");
 
         // 定义自动补全脚本的存放目录
         let autocompletion_dir = PathBuf::from(&home_dir).join(".bash_completion.d");
@@ -44,7 +45,8 @@ impl GenerateAutoCompletion {
 
         // 开始生成 自动补全脚本
         print_info_msg!("开始生成自动补全脚本...");
-        generate_to(Bash, &mut app, "waytous", &autocompletion_dir).expect("ailed to generate bash completion");
+        generate_to(Bash, &mut app, "waytous", &autocompletion_dir)
+            .expect("ailed to generate bash completion");
 
         // 检查 .bashrc 文件内是否包含的自动补全脚本的引用命令, 存在则不写入
         if !GenerateAutoCompletion::is_line_in_file(&bashrc_file_path, &autocompletion_line) {

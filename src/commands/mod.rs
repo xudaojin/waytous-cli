@@ -3,6 +3,6 @@
  * Date: 24-7-30
  * File: mod
  */
-pub mod module;
-pub mod autocompletion;
 pub mod artifact;
+pub mod autocompletion;
+pub mod module;

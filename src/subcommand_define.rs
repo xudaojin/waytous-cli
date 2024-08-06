@@ -14,7 +14,11 @@ pub enum ModuleCmds {
         #[arg(long, required = true, help = "模块名称")]
         name: String,
 
-        #[arg(long, default_value_t = false, help = "是否把 demo 工程拷贝到当前工程中, 默认不拷贝")]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "是否把 demo 工程拷贝到当前工程中, 默认不拷贝"
+        )]
         no_demo: bool,
     },
 
@@ -30,20 +34,22 @@ pub enum ModuleCmds {
         sub_cmd: ConfigSubCmd,
     },
 
-    #[command(about = "获取指定模块的信息[名称、版本号、平台、作者、描述] 等")]
-    Get {
-        #[command(subcommand)]
-        sub_cmd: GetSubCmd,
+    #[command(about = "列出软件包的简要信息")]
+    List {
+        #[arg(short, long, help = "指定模块的名字")]
+        name: Option<String>,
     },
 
-    #[command(about = "列出当前系统中已经安装的所有模块")]
-    List {},
+    #[command(about = "列出指定模块所包含的文件")]
+    ListFiles {
+        #[arg(long, help = "模块名称")]
+        name: String,
+    },
 }
 
 /// 枚举定义 module config 命令下的所有子命令
 #[derive(Parser)]
 pub enum ConfigSubCmd {
-
     #[command(about = "设置当前模块的配置信息")]
     Set {
         #[arg(long, help = "模块名称")]
@@ -52,8 +58,8 @@ pub enum ConfigSubCmd {
         #[arg(long, help = "模块版本号")]
         version: Option<String>,
 
-        #[arg(long, help = "模块所属平台")]
-        platform: Option<String>,
+        #[arg(long, value_parser = ["amd64", "arm64", "all"], help = "模块所属平台")]
+        architecture: Option<String>,
 
         #[arg(long, help = "模块作者信息")]
         author: Option<String>,
@@ -63,19 +69,8 @@ pub enum ConfigSubCmd {
     },
 
     #[command(about = "获取当前模块的配置信息")]
-    Get {
-
-    },
+    Get {},
 }
-
-
-/// 枚举定义 waytous module get 命令下的所有子命令
-#[derive(Parser)]
-pub enum GetSubCmd {
-    #[command(about = "获取当前模块的详细信息")]
-    Info {},
-}
-
 
 /// 枚举定义 waytous artifact 命令下的所有子命令
 #[derive(Parser)]
@@ -108,7 +103,6 @@ pub enum ArtifactCmds {
     Rsync {},
 }
 
-
 /// 枚举定义 waytous artifact write 命令下的所有子命令
 #[derive(Parser)]
 pub enum WriteSubCmd {
@@ -136,7 +130,6 @@ pub enum WriteSubCmd {
     #[command(about = "创建一个带有 rootfs 磁盘映像的 image OTA 制品")]
     RootfsImage {},
 }
-
 
 /// 枚举定义 waytous deploy 命令下的所有子命令
 #[derive(Parser)]

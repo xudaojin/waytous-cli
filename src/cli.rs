@@ -5,6 +5,7 @@
  */
 
 use clap::{ColorChoice, CommandFactory, Parser};
+
 use crate::commands;
 use crate::subcommand_define;
 
@@ -14,13 +15,12 @@ use crate::subcommand_define;
     name = "waytous",
     version = "0.1.0",
     author = "daojin.xu101@gmail.com",
-    about = "waytous",
+    about = "waytous"
 )]
 pub struct Cli {
     /// 创建 cmds 字段，用于存储解析的子命令
     #[command(subcommand)]
     pub cmds: Option<MainCmds>,
-
 }
 
 /// 枚举定义主命令下的所有子命令
@@ -51,9 +51,15 @@ impl Cli {
 
     pub fn run(&self) {
         match &self.cmds {
-            Some(MainCmds::Module { sub_cmd }) => { commands::module::module(sub_cmd); }
-            Some(MainCmds::Artifact { sub_cmd }) => { commands::artifact::artifact(sub_cmd); }
-            Some(MainCmds::Autocompletion {}) => { commands::autocompletion::GenerateAutoCompletion::process(); }
+            Some(MainCmds::Module { sub_cmd }) => {
+                commands::module::module(sub_cmd);
+            }
+            Some(MainCmds::Artifact { sub_cmd }) => {
+                commands::artifact::artifact(sub_cmd);
+            }
+            Some(MainCmds::Autocompletion {}) => {
+                commands::autocompletion::GenerateAutoCompletion::process();
+            }
             None => {
                 println!("{}", Cli::command().render_help())
             }

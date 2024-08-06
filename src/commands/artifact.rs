@@ -4,24 +4,29 @@
  * File: artifact
  */
 
-use std::fmt::format;
-use comfy_table::{ContentArrangement, Table};
 use comfy_table::presets::{UTF8_FULL, UTF8_NO_BORDERS};
+use comfy_table::{ContentArrangement, Table};
 
-use crate::{common, print_debug_msg, print_error_msg, print_info_msg, print_tips_msg};
 use crate::subcommand_define;
+use crate::{common, print_error_msg, print_info_msg, print_tips_msg};
 
 pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
     match sub_cmd {
-        subcommand_define::ArtifactCmds::Write { sub_cmd } => {
-            match sub_cmd {
-                subcommand_define::WriteSubCmd::ModuleImage { type_value, artifact_name,  software_version, mode, files } => {
-                    write_module_image(type_value, artifact_name, software_version, mode, files);
-                }
-                _ => {}
+        subcommand_define::ArtifactCmds::Write { sub_cmd } => match sub_cmd {
+            subcommand_define::WriteSubCmd::ModuleImage {
+                type_value,
+                artifact_name,
+                software_version,
+                mode,
+                files,
+            } => {
+                write_module_image(type_value, artifact_name, software_version, mode, files);
             }
+            _ => {}
+        },
+        subcommand_define::ArtifactCmds::Read { file } => {
+            get_artifact_info(file);
         }
-        subcommand_define::ArtifactCmds::Read { file } => { get_artifact_info(file); }
         subcommand_define::ArtifactCmds::Install { .. } => {}
         subcommand_define::ArtifactCmds::Modify { .. } => {}
         subcommand_define::ArtifactCmds::Cp { .. } => {}
@@ -30,7 +35,6 @@ pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
     }
 }
 
-
 /// 获取指定制品文件的信息
 /// # Arguments
 /// * file - 制品文件名称
@@ -38,7 +42,10 @@ pub fn artifact(sub_cmd: &subcommand_define::ArtifactCmds) {
 /// Null
 ///
 fn get_artifact_info(file: &str) {
-    print_info_msg!("{}", common::common::system_ret("mender-artifact", vec!["read", file]));
+    print_info_msg!(
+        "{}",
+        common::common::system_ret("mender-artifact", vec!["read", file])
+    );
 }
 
 /// 根据传入的参数来制作对应的 OTA 软件制品
@@ -50,26 +57,39 @@ fn get_artifact_info(file: &str) {
 /// * files - 需要打包的文件列表
 /// # Return
 /// * Null
-fn write_module_image(type_value: &str, artifact_name: &str,  software_version: &str, mode: &str, files: &Vec<String>) {
-
-
-
+fn write_module_image(
+    type_value: &str,
+    artifact_name: &str,
+    software_version: &str,
+    mode: &str,
+    files: &Vec<String>,
+) {
     // 组装最终的制品文件名称
     // 制品名字-版本号-当前时间-ubuntu_代号_平台-制品模式.mender
     let artifact_full_name = format!("{}-{}.mender", artifact_name, software_version);
 
     // 获取当前设备类型信息
-    let device_type = format!("{}-{}", common::common::get_system_info().architecture, common::common::get_system_info().code_name);
+    let device_type = format!(
+        "{}-{}",
+        common::common::get_system_info().architecture,
+        common::common::get_system_info().code_name
+    );
 
     print_tips_msg!("{}", mode);
     // 组装打包所需的参数
     let mut command_args = vec![
-        "write", "module-image",
-        "-T", type_value,
-        "-n", artifact_name,
-        "-o", &artifact_full_name,
-        "--device-type", &device_type,
-        "--software-version", software_version,
+        "write",
+        "module-image",
+        "-T",
+        type_value,
+        "-n",
+        artifact_name,
+        "-o",
+        &artifact_full_name,
+        "--device-type",
+        &device_type,
+        "--software-version",
+        software_version,
     ];
 
     // 组装传入的文件列表并写入到打包命令中
@@ -86,7 +106,13 @@ fn write_module_image(type_value: &str, artifact_name: &str,  software_version: 
             .load_preset(UTF8_FULL)
             .apply_modifier(UTF8_NO_BORDERS)
             .set_content_arrangement(ContentArrangement::Dynamic)
-            .set_header(vec!["制品类型", "制品文件名称", "适用平台", "版本信息", "文件"])
+            .set_header(vec![
+                "制品类型",
+                "制品文件名称",
+                "适用平台",
+                "版本信息",
+                "文件",
+            ])
             .add_row(vec![
                 type_value,
                 &artifact_full_name,
@@ -99,5 +125,4 @@ fn write_module_image(type_value: &str, artifact_name: &str,  software_version: 
     } else {
         print_error_msg!("{} 制品文件制作失败", artifact_name);
     }
-
 }
