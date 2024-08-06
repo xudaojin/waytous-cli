@@ -20,7 +20,7 @@ toml = "0.8.0"
 [package.metadata.deb]
 name = "waytous-cli"
 maintainer = "daojin.xu101@gmail.com"
-description = "waytous autopilot command tools"
 depends = "$auto"
 priority = "optional"
 copyright = "daojin.xu101@gmail.com"
+extended-description = """waytous command tools"""
