@@ -42,6 +42,13 @@ pub enum MainCmds {
 
     #[command(about = "生成并配置 cli 的自动补全脚本")]
     Autocompletion {},
+
+    #[command(about = "自动驾驶系统启动管理器")]
+    Supervisord {
+        #[command(subcommand)]
+        sub_cmd: subcommand_define::SupervisordCmds,
+    },
+
 }
 
 impl Cli {
@@ -59,6 +66,9 @@ impl Cli {
             }
             Some(MainCmds::Autocompletion {}) => {
                 commands::autocompletion::GenerateAutoCompletion::process();
+            }
+            Some(MainCmds::Supervisord { sub_cmd }) => {
+                commands::supervisord::supervisord(sub_cmd);
             }
             None => {
                 println!("{}", Cli::command().render_help())

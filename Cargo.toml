@@ -16,6 +16,10 @@ walkdir = "2.0.0"
 fern = { version = "0.6.0", features = ["colored"] }
 toml = "0.8.0"
 
+[dependencies.pyo3]
+version = "0.22.2"
+features = ["auto-initialize"]
+
 # 打包操作
 [package.metadata.deb]
 name = "waytous-cli"

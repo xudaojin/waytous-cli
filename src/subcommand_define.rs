@@ -166,3 +166,41 @@ pub enum InterfaceSubCmd {
     #[command(about = "初始化指定的串口接口")]
     Serial {},
 }
+
+
+#[derive(Parser)]
+pub enum SupervisordCmds {
+    #[command(about = "启动指定的模块")]
+    Start {
+        #[arg(short, long, help = "启动所有模块")]
+        all: bool,
+
+        #[arg(short, long, help = "需要启动的模块名称")]
+        name: String,
+    },
+
+    #[command(about = "重启指定的模块")]
+    Restart {
+        #[arg(short, long, help = "重启所有模块")]
+        all: bool,
+
+        #[arg(short, long, help = "需要重启的模块名称")]
+        name: String,
+    },
+
+    #[command(about = "停止指定的模块")]
+    Stop {
+        #[arg(short, long, help = "重启所有模块")]
+        all: bool,
+
+        #[arg(short, long, help = "需要重启的模块名称")]
+        name: String,
+    },
+
+    #[command(about = "列出当前系统中的所有模块")]
+    List {
+
+    },
+
+
+}
